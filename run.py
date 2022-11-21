@@ -142,7 +142,7 @@ if __name__=='__main__' :
     ###################################
     # exp for Power Plant environment #
     ###################################
-    env_dict = {'env_setting': ['POWERPLANT', max_iter],
+    env_dict = {'env_setting': ['POWERPLANT', max_iter, max_test],
                 'hp_value': [0.3, 3.0],
                 'threshold': 430.,
                 'initial_sets': ['[30.663,70.5748,1010.1157,75.2918]',
