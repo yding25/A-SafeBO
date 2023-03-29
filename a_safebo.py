@@ -10,10 +10,11 @@ import copy
 
 class asafebo(object):
 
-    def __init__(self, gp, bounds, threshold=None, max_iters=None, name=None):
+    def __init__(self, gp, bounds, threshold=None, max_iters=None, name=None, n_sample=None):
 
         self.dim = gp.input_dim
         self.name = name
+        self.n_Sample = n_sample
 
         self.gp = [copy.deepcopy(gp)]
 
@@ -65,6 +66,10 @@ class asafebo(object):
         self.threshold = np.copy(threshold)
         self.unsafe_rate = 0.
         self.gamma = 0.9
+
+        self.cnt_FNS = 0
+        self.cnt_EXP = 0
+        self.cnt_MAX = 0
 
         self.swarm = SwarmOptimization(self.beta, self.threshold, self.length, self.gp, self.swarm_size,
                                        self.optimal_velocities, self.window_threshold, self.density_threshold, self.delta,
@@ -132,8 +137,8 @@ class asafebo(object):
 
     def optimize(self):
 
-        model_size = min(int(self.max_iters), 300)
-        self.num_model = (max(len(self.memory_bank['X']) - 300, 0) // model_size) + 1
+        model_size = min(int(self.max_iters), self.n_Sample)
+        self.num_model = (max(len(self.memory_bank['X']) - self.n_Sample, 0) // model_size) + 1
 
         if len(self.memory_bank['X']) > 1:
 
@@ -289,12 +294,13 @@ class asafebo(object):
             if (self.density_score < self.density_threshold) or (self.unsafe_rate > self.delta):
                 if np.random.binomial(1, self.density_score) == 1:
                     self.swarm_type = 'find_new'
-
+                    self.cnt_FNS += 1
                 else:
                     self.swarm_type = 'expand'
-
+                    self.cnt_EXP += 1
             else:
                 self.swarm_type = 'find_new'
-
+                self.cnt_FNS += 1
         else:
             self.swarm_type = 'maximize'
+            self.cnt_MAX += 1
