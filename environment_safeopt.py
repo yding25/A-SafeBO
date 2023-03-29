@@ -16,7 +16,7 @@ import safeopt
 
 def options():
     parser = argparse.ArgumentParser(description='SafeOPT experiments')
-    parser.add_argument("--max_iter", default=500, type=int, help='Maximum number of iterations')
+    parser.add_argument("--max_iter", default=1000, type=int, help='Maximum number of iterations')
     parser.add_argument("--num_exp", default=0, type=int, help="A number indicating the number of experiments")
     parser.add_argument("--length_scale", default=0.3, type=float, help="Hyperparameter for GP(Length scale)")
     parser.add_argument("--beta", default=2.0, type=float, help="Hyperparameter for GP(Beta)")
