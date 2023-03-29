@@ -6,8 +6,8 @@ import pandas as pd
 def options():
     parser = argparse.ArgumentParser(description='Run experiments for performance comparison of the three algorithms\n'
                                                  '(A-SafeBO, SafeOPT, StageOPT)')
-    parser.add_argument("--max_iter", default=100, type=int, help='Maximum number of iterations for each algorithm')
-    parser.add_argument("--max_test", default=1, type=int, help="A number indicating how many times each experiment will be repeated.")
+    parser.add_argument("--max_iter", default=1000, type=int, help='Maximum number of iterations for each algorithm')
+    parser.add_argument("--max_test", default=10, type=int, help="A number indicating how many times each experiment will be repeated.")
     args = parser.parse_args()
     print(args)
     return args
@@ -24,17 +24,38 @@ def exp(env_dict):
     env_name = env_setting[0]
     max_iter = env_setting[1]
     max_test = env_setting[2]
+
     ############
     # A-SafeBO #
     ############
 
-    for start_point in initial_sets:
-        for i in range(max_test):
-            kwargs_value = [max_iter, i, env_name, threshold, start_point]
-            arg_options = ''
-            for k, v in zip(kwargs, kwargs_value):
-                arg_options += f' {k} {v}'
-            os.system(f'python3 environment_a_safebo.py {arg_options}')
+    n_sample_array = [50, 100, 300, 500, 700, 1000]
+
+    for n in n_sample_array:
+        for start_point in initial_sets:
+            for i in range(max_test):
+                n_sample = ["--num_smaple"]
+                kwargs_value = [max_iter, i, env_name, threshold, start_point, n]
+                arg_options = ''
+                for k, v in zip(kwargs + n_sample, kwargs_value):
+                    arg_options += f' {k} {v}'
+                os.system(f'python3 environment_a_safebo.py {arg_options}')
+
+    ##########
+    # GP-UCB #
+    ##########
+
+    n_sample_array = [300]
+
+    for n in n_sample_array:
+        for start_point in initial_sets:
+            for i in range(max_test):
+                n_sample = ["--num_smaple"]
+                kwargs_value = [max_iter, i, env_name, threshold, start_point, n]
+                arg_options = ''
+                for k, v in zip(kwargs + n_sample, kwargs_value):
+                    arg_options += f' {k} {v}'
+                os.system(f'python3 environment_gpucb.py {arg_options}')
 
     ###########
     # SafeOPT #
@@ -139,20 +160,18 @@ if __name__=='__main__' :
                                  '[0.659,0.600,0.355,0.018,0.203,-0.625,-0.404,0.419,0.298,-0.369]']}
     exp(env_dict)
 
-    ###################################
-    # exp for Power Plant environment #
-    ###################################
     env_dict = {'env_setting': ['POWERPLANT', max_iter, max_test],
-                'hp_value': [0.3, 3.0],
-                'threshold': 430.,
-                'initial_sets': ['[30.663,70.5748,1010.1157,75.2918]',
-                                 '[33.08995296,80.40255314,994.20235075,25.67331007]',
-                                 '[34.19279221,30.29279353,1014.14653527,68.90239283]',
-                                 '[32.15947294,71.12624406,1010.52548583,45.09570016]',
-                                 '[36.0114917,78.27162509,1013.41056311,97.4628945]',
-                                 '[30.16595202,69.28065608,1008.1440472,61.48579501]',
-                                 '[27.75832493,68.82797808,1014.84171746,43.66269532]',
-                                 '[29.62999749,25.45803955,1008.64206441,97.61239267]',
-                                 '[36.09885622,31.91987892,1030.16868218,79.76351214]',
-                                 '[36.67673215,31.35579247,1031.98630342,78.2728365]']}
+                'hp_value': [0.2, 3.0],
+                'threshold': 453.,
+                'initial_sets': ['[22.7710,29.2801,1032.5030,91.3730]',
+                                 '[21.6642,40.3449,1011.8862,85.6849]',
+                                 '[20.9155,46.5602,1032.5521,53.6079]',
+                                 '[20.2352,34.0057,1015.6979,90.9239]',
+                                 '[18.3926,64.8709,1028.1254,31.8348]',
+                                 '[15.0425,74.8759,999.9600,69.0304]',
+                                 '[20.4701,41.1833,1008.3691,86.6184]',
+                                 '[15.6398,72.1674,1021.6926,27.2426]',
+                                 '[18.0123,36.9396,1015.5951,88.7465]',
+                                 '[14.9420,74.8896,1002.0407,67.8375]']}
+
     exp(env_dict)
