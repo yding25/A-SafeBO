@@ -1,5 +1,6 @@
 import os
 import argparse
+import random
 import sys
 
 import GPy
@@ -17,7 +18,7 @@ from a_safebo import asafebo
 
 def options():
     parser = argparse.ArgumentParser(description='A-SafeBO experiments')
-    parser.add_argument("--max_iter", default=100, type=int, help='Maximum number of iterations')
+    parser.add_argument("--max_iter", default=1000, type=int, help='Maximum number of iterations')
     parser.add_argument("--num_exp", default=0, type=int, help="A number indicating the number of experiments")
     parser.add_argument("--env_name", default='GRIEWANK', type=str,
                         help="The name of the environment in which the experiment is run\n"
@@ -25,13 +26,14 @@ def options():
     parser.add_argument("--threshold", default=-0.9, type=float, help='Safety threshold for safety constraint')
     parser.add_argument("--start_point", default='[3.0,4.5]', type=json.loads,
                         help="Starting point that included in the safe set for optimization")
+    parser.add_argument("--num_smaple", default=300, type=int, help='Number of samples for building a gp in ensemble GP')
     args = parser.parse_args()
     print(args)
     return args
 
-def make_dir(env_name, start_point, num_exp, max_iter):
+def make_dir(env_name, start_point, num_exp, max_iter, n_sample):
 
-    path = './benchmark_map/' + env_name + '/A-SafeBO_' + str(max_iter)
+    path = './benchmark_map/' + env_name + '/A-SafeBO_' + str(max_iter) + '_N_'+ str(n_sample)
 
     if not (os.path.isdir(os.path.expanduser('./benchmark_map/' + env_name))):
         os.makedirs(os.path.join(os.path.expanduser('./benchmark_map/' + env_name)))
@@ -270,13 +272,14 @@ class benchmark_env(object):
         return np.atleast_2d(y)
 
 class Testbenchmark(object):
-    def __init__(self, name, max_iter, num_exp, threshold, start_point):
+    def __init__(self, name, max_iter, num_exp, threshold, start_point, n_sample):
 
         self.name = name
         self.num_exp = num_exp
         self.env = benchmark_env(name)
+        self.n_sample = n_sample
 
-        self.path = './benchmark_map/' + self.name + '/A-SafeBO_' + str(max_iter)
+        self.path = './benchmark_map/' + self.name + '/A-SafeBO_' + str(max_iter) + '_N_'+ str(self.n_sample)
 
         self.bound = copy.deepcopy(self.env.bound)
         self.domain = copy.deepcopy(self.env.domain)
@@ -321,7 +324,7 @@ class Testbenchmark(object):
 
         gp = GPy.models.GPRegression(self.init_x, self.init_y, kernel, noise_var=0.01)
 
-        self.opt = asafebo(gp=gp, bounds=self.bound, threshold=self.threshold, max_iters=self.max_iters, name=self.name)
+        self.opt = asafebo(gp=gp, bounds=self.bound, threshold=self.threshold, max_iters=self.max_iters, name=self.name, n_sample=self.n_sample)
 
     def plot_initial_setting(self):
 
@@ -502,10 +505,11 @@ if __name__ == '__main__':
     num_exp = args.num_exp
     threshold = args.threshold
     start_point = args.start_point
+    n_sample = args.num_smaple
 
-    make_dir(env_name, start_point, num_exp, max_iter)
+    make_dir(env_name, start_point, num_exp, max_iter, n_sample)
 
-    env_setting = Testbenchmark(env_name, max_iter, num_exp, threshold, start_point)
+    env_setting = Testbenchmark(env_name, max_iter, num_exp, threshold, start_point, n_sample)
 
     print('Option : {}'.format(args))
     x = np.copy(env_setting.opt.gp[0].X[-1])
@@ -561,6 +565,7 @@ if __name__ == '__main__':
     print('init param :{}, init value ;{}, threshold :{}'.format(init_param, init_value, env_setting.opt.threshold))
     print('num of samples : {}'.format(len(env_setting.opt.gp[0].X)))
     print("\n\ntotal time : %f s" % (t1 - t))
+    print('Cnt FNS : {}, EXP : {}, MAX : {}'.format(env_setting.opt.cnt_FNS, env_setting.opt.cnt_EXP, env_setting.opt.cnt_MAX))
 
     if env_setting.dim == 2:
         env_setting.plot_for_2D_dim(env_setting.regret_list)
