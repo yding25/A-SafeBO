@@ -20,3 +20,11 @@ pip install scikit-learn==1.0.2
 ```
 
 ## Usage
+The main script for this project is **main.py**, which includes numerous settings. However, for simplicity, a simplified version has been created to demonstrate real-world applications.
+
+To run the simplified version, navigate to the directory A-SafeBO and execute the following command:
+
+```
+cd A-SafeBO
+python main_simplified.py
+```
