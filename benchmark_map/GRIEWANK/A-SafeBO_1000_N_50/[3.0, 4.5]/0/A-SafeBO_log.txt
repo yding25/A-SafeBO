@@ -1,0 +1,14 @@
+Option : Namespace(env_name='GRIEWANK', max_iter=1000, num_exp=0, num_smaple=50, start_point=[3.0, 4.5], threshold=-0.9)
+init param :[3.  4.5], init value ;[[-0.41048695]], threshold :[[-0.9]]
+num of samples : 50
+
+
+total time : 506.514746 s
+Cnt FNS : 237, EXP : 663, MAX : 100
+2D map min : -2.001404, max : -0.001595
+Total exploration steps : 1000
+Safe exploration steps : 924
+Unsafe exploration steps : 76
+Safe exploration rates : 0.924000
+Target best position : [[0 0]], result : [[0.]]
+Estimated target best points : [[3.11516235 5.        ]], Estimated target best result : [[-0.23110098]]
