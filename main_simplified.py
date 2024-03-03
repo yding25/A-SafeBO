@@ -71,40 +71,7 @@ if __name__ == "__main__":
     max_test = args.max_test
 
     "The name of the environment in which the experiment is run\n"
-    "possible env : GRIEWANK, POWERPLANT"
-
-    #############################
-    # exp for Griewank function #
-    #############################
-
-    # Yan: Griewank 2-D 函数是一个具有多个局部最小值的函数，用来测试算法是否能够避免陷入局部最小值，寻找全局最小值。
-    # "hp_value": 这是一个包含两个元素的列表，表示实验中的某些超参数的值。在这个例子中，第一个元素是0.3，第二个元素是2.0。
-    # "threshold": 这是一个阈值，用于实验中的某些计算或判断。
-    # "initial_sets": 这是一个包含十个字符串的列表，每个字符串代表一个起始点的坐标。这些起始点将用于实验中。
-
-    # env_dict = {
-    #     "env_setting": ["GRIEWANK", max_iter, max_test],
-    #     "hp_value": [0.3, 2.0],
-    #     "threshold": -0.9,
-    #     # "initial_sets": [
-    #     #     "[3.0,4.5]",
-    #     #     "[-3.0,4.5]",
-    #     #     "[3.0,-4.5]",
-    #     #     "[-3.0,-4.5]",
-    #     #     "[4.0,5.0]",
-    #     #     "[-4.0,-5.0]",
-    #     #     "[2.5,5.0]",
-    #     #     "[-2.5,5.0]",
-    #     #     "[2.5,-5.0]",
-    #     #     "[-2.5,-5.0]",
-    #     # ],
-    #     "initial_sets": ["[3.0,4.5]"],
-    # }
-    # exp(env_dict)
-
-    # print(
-    #     f"results are saved in /benchmark_map/GRIEWANK/A-SafeBO_{max_iter}_N_{n_sample_array[0]}!"
-    # )
+    "possible env : POWERPLANT"
 
     #############################
     # exp for POWERPLANT function #
