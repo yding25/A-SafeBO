@@ -16,4 +16,7 @@ pip install GPy==1.10.0
 pip install xlrd==1.2.0
 pip install matplotlib==3.5.3
 pip install openpyxl==3.1.2
+pip install scikit-learn==1.0.2
 ```
+
+## Usage

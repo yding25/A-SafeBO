@@ -1,0 +1,14 @@
+Option : Namespace(env_name='POWERPLANT', max_iter=100, num_exp=0, num_smaple=10, start_point=[18.0123, 36.9396, 1015.5951, 88.7465], threshold=453.0)
+Plot only in 2D environment
+init param :[  18.0123   36.9396 1015.5951   88.7465], init value ;[[459.75105036]], threshold :[[453.]]
+num of samples : 10
+
+
+total time : 24.019358 s
+Cnt FNS : 0, EXP : 90, MAX : 10
+Total exploration steps : 100
+Safe exploration steps : 100
+Unsafe exploration steps : 0
+Safe exploration rates : 1.000000
+Target best position : [[   5.48   40.07 1019.63   65.62]], result : [[495.76]]
+Estimated target best points : [[   3.48517382   26.36861762 1009.38074873   79.92805639]], Estimated target best result : [[493.70562545]]
