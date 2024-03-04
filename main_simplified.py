@@ -4,6 +4,7 @@ import os
 import argparse
 import pandas as pd
 import sys
+import subprocess
 
 
 def options():
@@ -12,7 +13,7 @@ def options():
     )
     parser.add_argument(
         "--max_iter",
-        default=100,
+        default=10,
         type=int,
         help="Maximum number of iterations for each algorithm",
     )

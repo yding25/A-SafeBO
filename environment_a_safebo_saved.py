@@ -138,7 +138,233 @@ class benchmark_env(object):
         self.function = None
         self.CCPPmodel = None  # for POWERPLANT
 
-        if self.name == "POWERPLANT":
+        if self.name == "GRIEWANK":
+
+            # dimensions of the environment
+            self.dim = 2
+
+            # original
+            # self.function = lambda x: (1 + (np.power(x[:, 0], 2.) / 4000. + np.power(x[:, 1], 2.) / 4000.) -
+            #                            (np.cos(x[:, 0]) * np.cos(x[:, 1]) / 2.))
+
+            # version for maximization test
+            self.function = lambda x: -(
+                1
+                + (np.power(x[:, 0], 2.0) / 4000.0 + np.power(x[:, 1], 2.0) / 4000.0)
+                - (np.cos(x[:, 0]) * np.cos(x[:, 1] / 2.0))
+            )
+
+            # boundary of the environment
+            self.bound = [(-5.0, 5.0), (-5.0, 5.0)]
+            self.domain = [[-5.0, 5.0], [-5.0, 5.0]]
+
+            # global optimum
+            self.max_coordi = np.array([[0, 0]])
+            self.max_value = np.array([[0.0]])
+
+            for i in range(int(self.dim)):
+                self.grid.append(
+                    np.linspace(int(self.bound[i][0]), int(self.bound[i][1]), num=100)
+                )
+
+            self.grid = np.array([x.ravel() for x in np.meshgrid(*self.grid)]).T
+
+            file = "./benchmark_map/" + self.name + "/" + self.name + ".dat"
+            if not (os.path.isfile(file)):
+
+                self.target = self.function(self.grid)
+                self.target.tofile(
+                    "./benchmark_map/" + self.name + "/" + self.name + ".dat"
+                )
+            else:
+                self.target = np.fromfile(
+                    "./benchmark_map/" + self.name + "/" + self.name + ".dat",
+                    dtype=float,
+                )
+
+        elif self.name == "ADJIMAN":
+
+            # dimensions of the environment
+            self.dim = 2
+            # original
+            # self.function = lambda x: (np.cos(x[:, 0]) * np.sin(x[:, 1]) - x[:, 0] / (np.power(x[:, 1], 2) + 1.))
+
+            # version for maximization test
+            self.function = lambda x: -(
+                np.cos(x[:, 0]) * np.sin(x[:, 1])
+                - x[:, 0] / (np.power(x[:, 1], 2) + 1.0)
+            )
+
+            # boundary of the environment
+            self.bound = [(-5.0, 5.0), (-5.0, 5.0)]
+            self.domain = [[-5.0, 5.0], [-5.0, 5.0]]
+
+            # global optimum
+            self.max_coordi = np.array([[5, 0.0]])
+            self.max_value = np.array([5.0])
+
+            for i in range(int(self.dim)):
+                self.grid.append(
+                    np.linspace(int(self.bound[i][0]), int(self.bound[i][1]), num=100)
+                )
+
+            self.grid = np.array([x.ravel() for x in np.meshgrid(*self.grid)]).T
+
+            file = "./benchmark_map/" + self.name + "/" + self.name + ".dat"
+            if not (os.path.isfile(file)):
+
+                self.target = self.function(self.grid)
+                self.target.tofile(
+                    "./benchmark_map/" + self.name + "/" + self.name + ".dat"
+                )
+            else:
+                self.target = np.fromfile(
+                    "./benchmark_map/" + self.name + "/" + self.name + ".dat",
+                    dtype=float,
+                )
+
+        elif self.name == "HARTMANN_6D":
+
+            # dimensions of the environment
+            self.dim = 6
+
+            alpha = np.array([1.0, 1.2, 3.0, 3.2])
+            A = np.array(
+                [
+                    [10.0, 3.0, 17.0, 3.5, 1.7, 8.0],
+                    [0.05, 10.0, 17.0, 0.1, 8.0, 14.0],
+                    [3.0, 3.5, 1.7, 10.0, 17.0, 8.0],
+                    [17.0, 8.0, 0.05, 10.0, 0.1, 14.0],
+                ]
+            )
+            P = np.array(
+                [
+                    [0.1312, 0.1696, 0.5569, 0.124, 0.8283, 0.5886],
+                    [0.2329, 0.4135, 0.8307, 0.3736, 0.1004, 0.9991],
+                    [0.2348, 0.1451, 0.3522, 0.2883, 0.3047, 0.6650],
+                    [0.4047, 0.8828, 0.8732, 0.5743, 0.1091, 0.381],
+                ]
+            )
+            # original
+            # self.function = lambda x: -np.dot(alpha, np.exp(-np.sum(np.multiply(A, np.power((x - P), 2.)), axis=1)))
+
+            # version for maximization test
+            self.function = lambda x: np.dot(
+                alpha, np.exp(-np.sum(np.multiply(A, np.power((x - P), 2.0)), axis=1))
+            )
+
+            # boundary of the environment
+            self.bound = [
+                (0.0, 1.0),
+                (0.0, 1.0),
+                (0.0, 1.0),
+                (0.0, 1.0),
+                (0.0, 1.0),
+                (0.0, 1.0),
+            ]
+            self.domain = [
+                [0.0, 1.0],
+                [0.0, 1.0],
+                [0.0, 1.0],
+                [0.0, 1.0],
+                [0.0, 1.0],
+                [0.0, 1.0],
+            ]
+
+            # global optimum
+            self.max_coordi = np.array(
+                [[0.20169, 0.150011, 0.476874, 0.275332, 0.311652, 0.6573]]
+            )
+            self.max_value = np.array([[3.32237]])
+
+            self.grid = None
+            self.target = None
+
+        elif self.name == "PERIODIC_10D":
+
+            # dimensions of the environment
+            self.dim = 10
+            # original
+            # self.function = lambda x: 1. + (
+            #         np.power(np.sin(x[:, 0]), 2.) + np.power(np.sin(x[:, 1]), 2.) + np.power(np.sin(x[:, 2]), 2.) +
+            #         np.power(np.sin(x[:, 3]), 2.) + np.power(np.sin(x[:, 4]), 2.) + np.power(np.sin(x[:, 5]), 2.) +
+            #         np.power(np.sin(x[:, 6]), 2.) + np.power(np.sin(x[:, 7]), 2.) + np.power(np.sin(x[:, 8]), 2.) +
+            #         np.power(np.sin(x[:, 9]), 2.)) - 0.1 * (np.exp(-(np.power(x[:, 0], 2.) + np.power(x[:, 1], 2.) +
+            #                                                          np.power(x[:, 2], 2.) + np.power(x[:, 3], 2.) +
+            #                                                          np.power(x[:, 4], 2.) + np.power(x[:, 5], 2.) +
+            #                                                          np.power(x[:, 6], 2.) + np.power(x[:, 7], 2.) +
+            #                                                          (x[:, 8], 2.) + np.power(x[:, 9], 2.))))
+
+            # version for maximization test
+            self.function = lambda x: -(
+                1.0
+                + (
+                    np.power(np.sin(x[:, 0]), 2.0)
+                    + np.power(np.sin(x[:, 1]), 2.0)
+                    + np.power(np.sin(x[:, 2]), 2.0)
+                    + np.power(np.sin(x[:, 3]), 2.0)
+                    + np.power(np.sin(x[:, 4]), 2.0)
+                    + np.power(np.sin(x[:, 5]), 2.0)
+                    + np.power(np.sin(x[:, 6]), 2.0)
+                    + np.power(np.sin(x[:, 7]), 2.0)
+                    + np.power(np.sin(x[:, 8]), 2.0)
+                    + np.power(np.sin(x[:, 9]), 2.0)
+                )
+                - 0.1
+                * (
+                    np.exp(
+                        -(
+                            np.power(x[:, 0], 2.0)
+                            + np.power(x[:, 1], 2.0)
+                            + np.power(x[:, 2], 2.0)
+                            + np.power(x[:, 3], 2.0)
+                            + np.power(x[:, 4], 2.0)
+                            + np.power(x[:, 5], 2.0)
+                            + np.power(x[:, 6], 2.0)
+                            + np.power(x[:, 7], 2.0)
+                            + np.power(x[:, 8], 2.0)
+                            + np.power(x[:, 9], 2.0)
+                        )
+                    )
+                )
+            )
+
+            # boundary of the environment
+            self.bound = [
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+                (-2.0, 2.0),
+            ]
+            self.domain = [
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+                [-2.0, 2.0],
+            ]
+
+            # global optimum
+            self.max_coordi = np.array(
+                [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+            )
+            self.max_value = np.array([[-0.9]])
+
+            self.grid = None
+            self.target = None
+
+        elif self.name == "POWERPLANT":
 
             from datasets import powerplant
 
@@ -148,13 +374,6 @@ class benchmark_env(object):
             # dimensions of the environment
             self.dim = 4
             self.function = lambda x: powerplant.predict(self.CCPPmodel, x)
-
-            print("test:")
-            print(f"X:{X}")
-            print(f"y:{y}")
-            print(f"self.CCPPmodel:{self.CCPPmodel}")
-            print(f"self.function:{self.function}")
-            print("-" * 30)
 
             # boundary of the environment
             self.bound = [
@@ -192,10 +411,7 @@ class benchmark_env(object):
             x = np.atleast_2d(x)
             np.random.seed(int(time.time()))
             noise = np.random.normal(0, np.sqrt(self.noise_var), len(x))
-            y_fake = self.function(x) + noise
-            print(f"x:{x}")
-            print(f"y_fake:{y_fake}")
-            y = float(input("please input the value:\n"))
+            y = self.function(x) + noise
 
         return np.atleast_2d(y)
 
