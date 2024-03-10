@@ -146,56 +146,61 @@ class benchmark_env(object):
             self.CCPPmodel = powerplant.train(X, y)
 
             # dimensions of the environment
-            self.dim = 4
-            self.function = lambda x: powerplant.predict(self.CCPPmodel, x)
+            self.dim = 3
+            # self.function = lambda x: powerplant.predict(self.CCPPmodel, x)
 
-            print("test:")
-            print(f"X:{X}")
-            print(f"y:{y}")
-            print(f"self.CCPPmodel:{self.CCPPmodel}")
-            print(f"self.function:{self.function}")
-            print("-" * 30)
+            # print("test:")
+            # print(f"X:{X}")
+            # print(f"y:{y}")
+            # print(f"self.CCPPmodel:{self.CCPPmodel}")
+            # print(f"self.function:{self.function}")
+            # print("-" * 30)
+
+            # # boundary of the environment
+            # self.bound = [
+            #     (1.81, 37.11),
+            #     (25.36, 81.56),
+            #     (992.89, 1033.30),
+            #     (25.56, 100.16),
+            # ]
+            # self.domain = [
+            #     [1.81, 37.11],
+            #     [25.36, 81.56],
+            #     [992.89, 1033.30],
+            #     [25.56, 100.16],
+            # ]
 
             # boundary of the environment
             self.bound = [
-                (1.81, 37.11),
-                (25.36, 81.56),
-                (992.89, 1033.30),
-                (25.56, 100.16),
+                (10, 200),
+                (10, 100),
+                (1, 60),
             ]
             self.domain = [
-                [1.81, 37.11],
-                [25.36, 81.56],
-                [992.89, 1033.30],
-                [25.56, 100.16],
+                [10, 200],
+                [10, 100],
+                [1, 60],
             ]
 
+            # # global optimum
+            # self.max_coordi = np.array([[5.48, 40.07, 1019.63, 65.62]])
+            # self.max_value = np.array([[495.76]])
+
             # global optimum
-            self.max_coordi = np.array([[5.48, 40.07, 1019.63, 65.62]])
-            self.max_value = np.array([[495.76]])
+            self.max_coordi = np.array([[5.48, 40.07, 3]])
+            self.max_value = np.array([[1.5000000]])
 
             self.grid = None
             self.target = None
 
     def sample(self, x):
-
-        if self.name == "HARTMANN_6D":
-            x = np.atleast_2d(x)
-            y = []
-            for i in range(len(x)):
-                x_i = [x[i], x[i], x[i], x[i]]
-                np.random.seed(int(time.time()))
-                noise = np.random.normal(0, np.sqrt(self.noise_var), 1)
-                y.append(float(self.function(x_i)) + float(noise))
-
-        else:
-            x = np.atleast_2d(x)
-            np.random.seed(int(time.time()))
-            noise = np.random.normal(0, np.sqrt(self.noise_var), len(x))
-            y_fake = self.function(x) + noise
-            print(f"x:{x}")
-            print(f"y_fake:{y_fake}")
-            y = float(input("please input the value:\n"))
+        x = np.atleast_2d(x)
+        np.random.seed(int(time.time()))
+        noise = np.random.normal(0, np.sqrt(self.noise_var), len(x))
+        # y_fake = self.function(x) + noise
+        print(f"x:{x}")
+        # print(f"y_fake:{y_fake}")
+        y = float(input("please input the value:\n"))
 
         return np.atleast_2d(y)
 
